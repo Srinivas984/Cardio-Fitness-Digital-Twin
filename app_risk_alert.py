@@ -349,7 +349,7 @@ if metrics:
     fig.update_xaxes(title_text="Days from now")
     fig.update_yaxes(title_text="Heart Rate (bpm)", secondary_y=False)
     fig.update_yaxes(title_text="HRV (ms)", secondary_y=True)
-    fig.update_layout(hovermode='x unified', height=400, width='100%')
+    fig.update_layout(hovermode='x unified', height=400)
     
     st.plotly_chart(fig, use_container_width=True)
     
@@ -378,7 +378,7 @@ if metrics:
             }
         }
     ))
-    fig_gauge.update_layout(height=400, width='100%')
+    fig_gauge.update_layout(height=400)
     st.plotly_chart(fig_gauge, use_container_width=True)
     
 else:
