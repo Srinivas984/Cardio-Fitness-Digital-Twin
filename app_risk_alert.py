@@ -189,31 +189,44 @@ st.divider()
 metrics = get_latest_metrics()
 
 if metrics:
+    # Helper function to extract numeric values from nested dict structures
+    def extract_numeric(value, default, target_key=None):
+        """Extract numeric value from potentially nested dict structure"""
+        if isinstance(value, dict):
+            if target_key and target_key in value:
+                return float(value[target_key])
+            elif "value" in value:
+                val = value["value"]
+                if isinstance(val, dict):
+                    # Try common numeric keys
+                    if target_key and target_key in val:
+                        return float(val[target_key])
+                    elif target_key == "steps" and "steps" in val:
+                        return int(val["steps"])
+                    elif target_key == "active_energy" and "calories" in val:
+                        return float(val["calories"])
+                else:
+                    return float(val)
+            return float(default)
+        return float(value or default)
+    
     # Extract and convert metrics to numeric values
-    # Handle both dict and numeric formats from API
-    heart_rate_raw = metrics.get("heart_rate", 70)
-    heart_rate = heart_rate_raw["value"] if isinstance(heart_rate_raw, dict) else float(heart_rate_raw or 70)
-    
-    hrv_raw = metrics.get("hrv", 50)
-    hrv = hrv_raw["value"] if isinstance(hrv_raw, dict) else float(hrv_raw or 50)
-    
-    steps_raw = metrics.get("steps", 5000)
-    steps = steps_raw["value"] if isinstance(steps_raw, dict) else int(steps_raw or 5000)
-    
-    active_energy_raw = metrics.get("active_energy", 0)
-    active_energy = active_energy_raw["value"] if isinstance(active_energy_raw, dict) else float(active_energy_raw or 0)
+    heart_rate = int(extract_numeric(metrics.get("heart_rate", 70), 70, "value"))
+    hrv = float(extract_numeric(metrics.get("hrv", 50), 50, "value"))
+    steps = int(extract_numeric(metrics.get("steps", 5000), 5000, "steps"))
+    active_energy = float(extract_numeric(metrics.get("active_energy", 0), 0, "calories"))
     
     # Display current metrics
     st.subheader("📊 Current Vital Signs")
     metric_cols = st.columns(4)
     with metric_cols[0]:
-        st.metric("❤️ Heart Rate", f"{int(heart_rate)} bpm")
+        st.metric("❤️ Heart Rate", f"{heart_rate} bpm")
     with metric_cols[1]:
-        st.metric("📈 HRV", f"{float(hrv):.1f} ms")
+        st.metric("📈 HRV", f"{hrv:.1f} ms")
     with metric_cols[2]:
-        st.metric("👟 Steps", f"{int(steps):,}")
+        st.metric("👟 Steps", f"{steps:,}")
     with metric_cols[3]:
-        st.metric("🔥 Active Energy", f"{float(active_energy):.0f} kcal")
+        st.metric("🔥 Active Energy", f"{active_energy:.0f} kcal")
     
     st.divider()
     
