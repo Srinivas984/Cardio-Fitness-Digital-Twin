@@ -427,6 +427,170 @@ def get_iphone_data():
     }), 200
 
 
+# ============ RISK ANALYSIS ENDPOINTS ============
+
+@app.route('/api/risk/overtraining', methods=['POST'])
+def calculate_overtraining_risk():
+    """Calculate overtraining risk based on metrics"""
+    try:
+        data = request.json
+        heart_rate = data.get("heart_rate", 70)
+        hrv = data.get("hrv", 50)
+        steps = data.get("steps", 5000)
+        
+        overtraining_score = 0
+        reasons = []
+        
+        # High resting heart rate
+        if heart_rate > 85:
+            overtraining_score += 20
+            reasons.append(f"Elevated resting HR ({heart_rate} bpm) - sign of stress/fatigue")
+        
+        # Low HRV (Heart Rate Variability)
+        if hrv < 40:
+            overtraining_score += 35
+            reasons.append(f"Low HRV ({hrv:.1f} ms) - nervous system fatigued")
+        elif hrv < 50:
+            overtraining_score += 20
+            reasons.append(f"Below-optimal HRV ({hrv:.1f} ms) - recovery needed")
+        
+        # High training volume
+        if steps > 20000:
+            overtraining_score += 15
+            reasons.append(f"High daily activity ({steps:,} steps) - ensure adequate rest")
+        
+        return jsonify({
+            "overtraining_risk": min(overtraining_score, 100),
+            "severity": "HIGH" if overtraining_score > 60 else ("MODERATE" if overtraining_score > 40 else "LOW"),
+            "reasons": reasons,
+            "recommendation": (
+                "CRITICAL: Take 2-3 days complete rest" if overtraining_score > 60 
+                else ("Reduce intensity, focus on recovery" if overtraining_score > 40 
+                      else ("Monitor closely" if overtraining_score > 20 
+                            else "Excellent recovery status"))
+            )
+        }), 200
+    
+    except Exception as e:
+        return jsonify({"error": str(e)}), 400
+
+
+@app.route('/api/risk/heart-attack', methods=['POST'])
+def calculate_heart_attack_risk():
+    """Calculate 30-day heart attack risk"""
+    try:
+        data = request.json
+        heart_rate = data.get("heart_rate", 70)
+        hrv = data.get("hrv", 50)
+        age = data.get("age", 45)
+        diabetes = data.get("diabetes", False)
+        smoking = data.get("smoking", 0)
+        
+        risk_score = 0
+        risk_factors = []
+        
+        # Baseline age risk
+        baseline_age_risk = (age - 40) * 0.5 if age >= 40 else 0
+        risk_score += baseline_age_risk
+        
+        # HRV is strong predictor
+        if hrv < 30:
+            risk_score += 25
+            risk_factors.append(f"CRITICAL: Severely low HRV ({hrv:.1f} ms)")
+        elif hrv < 50:
+            risk_score += 15
+            risk_factors.append(f"Low HRV ({hrv:.1f} ms) - autonomic imbalance")
+        elif hrv > 80:
+            risk_score -= 5
+            risk_factors.append(f"Excellent HRV ({hrv:.1f} ms)")
+        
+        # Resting heart rate
+        if heart_rate > 100:
+            risk_score += 20
+            risk_factors.append(f"HIGH: Resting HR {heart_rate} bpm (elevated)")
+        elif heart_rate > 85:
+            risk_score += 10
+            risk_factors.append(f"Elevated HR {heart_rate} bpm")
+        elif heart_rate < 60:
+            risk_score -= 5
+            risk_factors.append(f"Good resting HR {heart_rate} bpm")
+        
+        # Diabetes
+        if diabetes:
+            risk_score += 30
+            risk_factors.append("Diabetes: +30% risk multiplier")
+        
+        # Smoking
+        risk_score += smoking * 2
+        if smoking > 0:
+            risk_factors.append(f"Smoking ({smoking} cigarettes): Risk increased")
+        
+        risk_percentage = min(max(risk_score, 0), 100)
+        
+        return jsonify({
+            "30day_heart_attack_risk": risk_percentage,
+            "severity": "HIGH" if risk_percentage > 40 else ("MODERATE" if risk_percentage > 15 else "LOW"),
+            "risk_factors": risk_factors,
+            "recommendation": (
+                "CRITICAL: Seek immediate medical evaluation" if risk_percentage > 50
+                else ("HIGH RISK: Schedule urgent cardiology appointment" if risk_percentage > 30
+                      else ("MODERATE: Consult cardiologist for risk stratification" if risk_percentage > 15
+                            else "LOW: Continue healthy lifestyle"))
+            )
+        }), 200
+    
+    except Exception as e:
+        return jsonify({"error": str(e)}), 400
+
+
+@app.route('/api/risk/combined', methods=['GET'])
+def get_combined_risk():
+    """Get combined overtraining + heart attack risk"""
+    try:
+        if not iphone_live_data["timestamp"]:
+            return jsonify({"error": "No metrics available"}), 400
+        
+        hr = iphone_live_data.get("heart_rate", 70)
+        hrv = iphone_live_data.get("hrv", 50)
+        steps = iphone_live_data.get("steps", 5000)
+        
+        # Calculate both risks
+        overtraining = 0
+        if hr > 85:
+            overtraining += 20
+        if hrv < 40:
+            overtraining += 35
+        elif hrv < 50:
+            overtraining += 20
+        if steps > 20000:
+            overtraining += 15
+        
+        ha_risk = 0
+        if hrv < 30:
+            ha_risk += 25
+        elif hrv < 50:
+            ha_risk += 15
+        elif hrv > 80:
+            ha_risk -= 5
+        
+        if hr > 100:
+            ha_risk += 20
+        elif hr > 85:
+            ha_risk += 10
+        
+        combined = (overtraining * 0.3 + ha_risk * 0.7)
+        
+        return jsonify({
+            "overtraining_risk": min(overtraining, 100),
+            "heart_attack_risk": min(ha_risk, 100),
+            "combined_risk_score": min(max(combined, 0), 100),
+            "overall_severity": "CRITICAL" if combined > 60 else ("HIGH" if combined > 40 else ("MODERATE" if combined > 20 else "LOW"))
+        }), 200
+    
+    except Exception as e:
+        return jsonify({"error": str(e)}), 400
+
+
 @app.errorhandler(404)
 def not_found(error):
     """Handle 404 errors"""

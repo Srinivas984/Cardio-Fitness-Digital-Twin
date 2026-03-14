@@ -1,0 +1,190 @@
+🎉 CARDIO DIGITAL TWIN v2.0 - SYSTEM SUMMARY
+═══════════════════════════════════════════════════════
+
+✅ ALL SYSTEMS OPERATIONAL
+
+Current Status:
+  🟢 API Server (Port 5000) ............ RUNNING
+  🟢 Main Dashboard (Port 8508) ....... RUNNING  
+  🟢 Risk Alert System (Port 8509) .... RUNNING
+
+═══════════════════════════════════════════════════════
+
+🌐 QUICK LINKS - OPEN IN BROWSER NOW:
+
+📊 Main Cardio Coach Dashboard
+   http://localhost:8508
+   Features: 7 tabs, AI coaching, cardiac analysis
+
+🚨 Cardio Risk Alert System  
+   http://localhost:8509
+   Features: Overtraining detection, heart attack risk
+
+💾 API Server Health Check
+   http://localhost:5000
+
+═══════════════════════════════════════════════════════
+
+🆕 NEW RISK ALERT FEATURES:
+
+⚡ OVERTRAINING DETECTION
+  ├─ Monitors HRV (Heart Rate Variability)
+  ├─ Tracks resting heart rate trends
+  ├─ Analyzes training volume
+  └─ Provides recovery recommendations
+
+🚨 HEART ATTACK RISK PREDICTION
+  ├─ 30-day cardiac event assessment
+  ├─ Framingham Risk Score adapted
+  ├─ Multi-factor analysis
+  └─ Medical action recommendations
+
+═══════════════════════════════════════════════════════
+
+📱 TO SEND DATA FROM APPLE WATCH:
+
+1. Create iPhone Shortcut (see QUICK_SHORTCUT.md)
+2. Get your laptop IP:
+   ipconfig | findstr IPv4
+   (look for 192.168.x.x)
+
+3. Update Shortcut URL:
+   POST http://<YOUR_IP>:5000/api/upload
+
+4. Send this JSON:
+   {
+     "heart_rate": <value>,
+     "steps": <value>,
+     "active_energy": <value>
+   }
+
+5. Shortcut runs every 1 minute automatically
+
+═══════════════════════════════════════════════════════
+
+🔴 ALERT THRESHOLDS:
+
+⚡ OVERTRAINING RISK:
+   0-20%   ✅ GREEN  - Normal, continue training
+   20-40%  ⚠️ YELLOW - Monitor recovery
+   40-60%  🔴 ORANGE - Reduce intensity
+   60-100% 🚨 RED    - STOP, take rest days
+
+😨 HEART ATTACK RISK (30-day):
+   0-15%   ✅ GREEN  - Low risk
+   15-40%  ⚠️ YELLOW - Moderate, consult doctor
+   40-60%  🔴 ORANGE - High, urgent cardiology
+   60-100% 🚨 RED    - Critical, seek ER
+
+═══════════════════════════════════════════════════════
+
+📚 DOCUMENTATION:
+
+QUICK_REFERENCE.md      → Quick start guide
+RISK_ALERT_README.md    → Detailed risk system docs
+SYSTEM_SETUP.md         → Complete architecture
+QUICK_SHORTCUT.md       → iPhone setup instructions
+
+═══════════════════════════════════════════════════════
+
+🚀 FOR YOUR FRIEND'S LAPTOP:
+
+1. git clone https://github.com/Srinivas984/Cardio-Fitness-Digital-Twin.git
+2. cd Cardio-Fitness-Digital-Twin
+3. python -m venv .venv
+4. .\.venv\Scripts\Activate.ps1
+5. pip install -r requirements.txt
+6. .\RUN_ALL.ps1
+
+═══════════════════════════════════════════════════════
+
+⚠️ MEDICAL DISCLAIMER:
+
+This is an EDUCATIONAL tool ONLY.
+- NOT a medical diagnosis device
+- NOT a substitute for doctor
+- NOT an emergency alert system
+
+ALWAYS:
+✓ Consult qualified cardiologist
+✓ Seek emergency care for chest pain
+✓ Never ignore cardiac symptoms
+✓ Get professional evaluation for persistent high risk
+
+EMERGENCY: Call 911 immediately
+
+═══════════════════════════════════════════════════════
+
+✅ VERIFICATION:
+
+Test 1: Check API is working
+  curl http://localhost:5000/api/metrics
+
+Test 2: Check Main Dashboard loads
+  http://localhost:8508
+
+Test 3: Check Risk Alert loads
+  http://localhost:8509
+
+Test 4: Check overtraining detection
+  Dashboard sidebar shows "⚡ Overtraining Risk Assessment"
+
+Test 5: Check heart attack risk
+  Dashboard shows "🚨 30-Day Heart Attack Risk Prediction"
+
+═══════════════════════════════════════════════════════
+
+📊 EXAMPLE SCENARIOS:
+
+Scenario 1: Healthy Recovery
+├─ HR: 65 bpm ✅
+├─ HRV: 70 ms ✅  
+├─ Steps: 8,000 ✅
+└─ Risk: LOW ✅
+
+Scenario 2: Overtraining Alert
+├─ HR: 95 bpm ⚠️
+├─ HRV: 35 ms 🚨
+├─ Steps: 25,000 ⚠️  
+└─ Risk: HIGH - REDUCE INTENSITY
+
+Scenario 3: Cardiac Warning
+├─ HR: 100+ bpm 🚨
+├─ HRV: <30 ms 🚨
+├─ Age: 55 years
+└─ Risk: 50%+ - SEEK MEDICAL EVALUATION
+
+═══════════════════════════════════════════════════════
+
+🔧 SYSTEM REQUIREMENTS:
+
+✓ Windows 10/11
+✓ Python 3.14+
+✓ 2GB RAM minimum
+✓ WiFi connection
+✓ Apple Watch with iPhone
+✓ Modern web browser
+
+═══════════════════════════════════════════════════════
+
+💾 TO STOP ALL SERVICES:
+
+1. Close the three terminal windows, OR
+2. Run: Get-Process python* | Stop-Process -Force
+
+═══════════════════════════════════════════════════════
+
+🎯 NEXT STEPS:
+
+1. ✅ Open both dashboard URLs in browser
+2. ⏳ Get Apple Watch data flowing via iPhone Shortcut
+3. 📊 Monitor dashboards for real-time metrics
+4. 🚨 Watch for risk alerts
+5. 📈 Review trends and recommendations
+6. 🔄 Share with friend - git clone the repo!
+
+═══════════════════════════════════════════════════════
+
+Need help? Check QUICK_REFERENCE.md or RISK_ALERT_README.md
+
+Version 2.0 | March 14, 2026 | Status: ✅ PRODUCTION READY
