@@ -189,22 +189,31 @@ st.divider()
 metrics = get_latest_metrics()
 
 if metrics:
-    heart_rate = metrics.get("heart_rate", 70)
-    hrv = metrics.get("hrv", 50)
-    steps = metrics.get("steps", 5000)
-    active_energy = metrics.get("active_energy", 0)
+    # Extract and convert metrics to numeric values
+    # Handle both dict and numeric formats from API
+    heart_rate_raw = metrics.get("heart_rate", 70)
+    heart_rate = heart_rate_raw["value"] if isinstance(heart_rate_raw, dict) else float(heart_rate_raw or 70)
+    
+    hrv_raw = metrics.get("hrv", 50)
+    hrv = hrv_raw["value"] if isinstance(hrv_raw, dict) else float(hrv_raw or 50)
+    
+    steps_raw = metrics.get("steps", 5000)
+    steps = steps_raw["value"] if isinstance(steps_raw, dict) else int(steps_raw or 5000)
+    
+    active_energy_raw = metrics.get("active_energy", 0)
+    active_energy = active_energy_raw["value"] if isinstance(active_energy_raw, dict) else float(active_energy_raw or 0)
     
     # Display current metrics
     st.subheader("📊 Current Vital Signs")
     metric_cols = st.columns(4)
     with metric_cols[0]:
-        st.metric("❤️ Heart Rate", f"{heart_rate} bpm")
+        st.metric("❤️ Heart Rate", f"{int(heart_rate)} bpm")
     with metric_cols[1]:
-        st.metric("📈 HRV", f"{hrv:.1f} ms")
+        st.metric("📈 HRV", f"{float(hrv):.1f} ms")
     with metric_cols[2]:
-        st.metric("👟 Steps", f"{steps:,}")
+        st.metric("👟 Steps", f"{int(steps):,}")
     with metric_cols[3]:
-        st.metric("🔥 Active Energy", f"{active_energy:.0f} kcal")
+        st.metric("🔥 Active Energy", f"{float(active_energy):.0f} kcal")
     
     st.divider()
     
