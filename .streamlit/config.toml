@@ -1,0 +1,18 @@
+[server]
+address = "127.0.0.1"
+port = 8508
+headless = true
+runOnSave = true
+
+[client]
+showErrorDetails = true
+
+[logger]
+level = "info"
+
+[theme]
+primaryColor = "#FF0000"
+backgroundColor = "#1a1a1a"
+secondaryBackgroundColor = "#262626"
+textColor = "#FFFFFF"
+font = "monospace"

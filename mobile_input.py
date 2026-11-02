@@ -304,8 +304,8 @@ if __name__ == '__main__':
     print("\n" + "="*60)
     print("📱 MOBILE HEALTH INPUT DASHBOARD")
     print("="*60 + "\n")
-    print("✅ Open on iPhone: http://192.168.64.217:5001\n")
+    print("✅ Local input form: http://127.0.0.1:5001\n")
     print("📊 Data will appear live in Cardio Digital Twin!\n")
     print("="*60 + "\n")
     
-    app.run(host='0.0.0.0', port=5001, debug=False)
+    app.run(host='127.0.0.1', port=5001, debug=False)
